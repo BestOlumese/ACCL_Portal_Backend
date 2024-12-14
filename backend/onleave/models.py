@@ -11,6 +11,7 @@ class Leave(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="leaves")
+    director = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="director")
     status = models.CharField(
         max_length=100,
         choices=Status.choices,

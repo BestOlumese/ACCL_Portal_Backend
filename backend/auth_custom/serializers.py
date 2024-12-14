@@ -19,6 +19,7 @@ class CustomTokenRefreshSerializer(TokenRefreshSerializer):
         # Add custom claims to the new access token
         access = refresh.access_token
         access['is_superuser'] = user.is_superuser
+        access['is_staff'] = user.is_staff
         access['username'] = user.username
         access['first_name'] = user.first_name
         access['last_name'] = user.last_name
@@ -33,6 +34,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         # Add custom claims
         data['is_superuser'] = self.user.is_superuser
+        data['is_staff'] = self.user.is_staff
         data['username'] = self.user.username
         data['first_name'] = self.user.first_name
         data['last_name'] = self.user.last_name
@@ -45,6 +47,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         # Add custom claims
         token['is_superuser'] = user.is_superuser
+        token['is_staff'] = user.is_staff
         token['username'] = user.username
         token['first_name'] = user.first_name
         token['last_name'] = user.last_name
