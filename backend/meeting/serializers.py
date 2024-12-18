@@ -30,7 +30,7 @@ class MeetingSerializer(serializers.ModelSerializer):
                         day=day,
                         start_time__lt=end_time,
                         end_time__gt=start_time
-                    ).exclude(id=instance.id)  # Exclude the current instance to avoid self-conflict
+                    ).exclude(id=instance.id)  # Exclude the current instance to avoid self-conflic
 
                     if overlapping_meetings.exists():
                         raise serializers.ValidationError("This meeting overlaps with an existing meeting.")
