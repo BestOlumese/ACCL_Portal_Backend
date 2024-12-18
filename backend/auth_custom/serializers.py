@@ -21,6 +21,7 @@ class CustomTokenRefreshSerializer(TokenRefreshSerializer):
         access['is_superuser'] = user.is_superuser
         access['is_staff'] = user.is_staff
         access['username'] = user.username
+        access['total_leaves'] = user.userprofile.total_leaves
         access['first_name'] = user.first_name
         access['last_name'] = user.last_name
 
@@ -38,6 +39,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         data['username'] = self.user.username
         data['first_name'] = self.user.first_name
         data['last_name'] = self.user.last_name
+        data['total_leaves'] = self.user.userprofile.total_leaves
 
         return data
 
@@ -51,6 +53,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['username'] = user.username
         token['first_name'] = user.first_name
         token['last_name'] = user.last_name
+        token['total_leaves'] = user.userprofile.total_leaves
 
         return token
     
@@ -63,3 +66,8 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
+    
+class RetrieveUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["leaves"]
