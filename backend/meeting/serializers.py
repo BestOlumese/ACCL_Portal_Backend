@@ -17,6 +17,7 @@ class MeetingSerializer(serializers.ModelSerializer):
         # Get the current meeting instance to compare against the proposed changes
         instance = self.instance
         day = data.get('day', instance.day if instance else None)
+        room = data.get('room', instance.room if instance else None)
         start_time = data.get('start_time', instance.start_time if instance else None)
         end_time = data.get('end_time', instance.end_time if instance else None)
         user = self.context["request"].user
@@ -24,19 +25,29 @@ class MeetingSerializer(serializers.ModelSerializer):
         # Only check for overlapping meetings if the start or end time is being changed
         if start_time and end_time:  # Check only if both start_time and end_time are provided
             if instance:  # During updates
-                if start_time != instance.start_time or end_time != instance.end_time:
+                if start_time != instance.start_time or end_time != instance.end_time or room != instance.room or day != instance.day:
                     overlapping_meetings = Meeting.objects.filter(
-                        user=user,
+                        room=room,
                         day=day,
                         start_time__lt=end_time,
                         end_time__gt=start_time
-                    ).exclude(id=instance.id)  # Exclude the current instance to avoid self-conflic
+                    ).exclude(id=instance.id)  # Exclude the current instance to avoid self-conflict
+
+                    if overlapping_meetings.exists():
+                        raise serializers.ValidationError("This meeting overlaps with an existing meeting.")
+                else:
+                    overlapping_meetings = Meeting.objects.filter(
+                        room=room,
+                        day=day,
+                        start_time__lt=end_time,
+                        end_time__gt=start_time
+                    ) 
 
                     if overlapping_meetings.exists():
                         raise serializers.ValidationError("This meeting overlaps with an existing meeting.")
             else:  # During creation
                 overlapping_meetings = Meeting.objects.filter(
-                    user=user,
+                    room=room,
                     day=day,
                     start_time__lt=end_time,
                     end_time__gt=start_time
