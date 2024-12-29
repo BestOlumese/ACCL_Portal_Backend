@@ -16,8 +16,7 @@ class ListCreateLeave(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        user = self.request.user
-        return Leave.objects.filter(user=user).order_by('-created_at')
+        return Leave.objects.all().order_by('-created_at')
     
     def perform_create(self, serializer):
         # Calculate the leave duration first

@@ -14,8 +14,8 @@ class LeaveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Leave
-        fields = ["id", "content", "start_date", "end_date", "user_firstname", "user_lastname", "user_name", "user_total_leaves", "user_leaves_balance", "director", "director_firstname", "director_lastname", "director_name", "status", "created_at"]
-        extra_kwargs = {"username": {"read_only": True}, "status": {"read_only": True}}
+        fields = ["id", "content", "start_date", "end_date", "user", "user_firstname", "user_lastname", "user_name", "user_total_leaves", "user_leaves_balance", "director", "director_firstname", "director_lastname", "director_name", "status", "created_at"]
+        extra_kwargs = {"user": {"read_only": True}, "status": {"read_only": True}}
 
     def get_user_name(self, obj):
         # Combine the first and last name for the user
